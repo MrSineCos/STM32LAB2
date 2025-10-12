@@ -112,20 +112,6 @@ void initState() {
 	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
 }
 
-/*
- void setNumberOnClock(int num) {
- if (num >= 1 && num <= 12) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0 << num, GPIO_PIN_RESET);
- else return;
- }
- // End setNumberOnClock
-
- void clearNumberOnClock(int num) {
- if (num >= 1 && num <= 12) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0 << num, GPIO_PIN_SET);
- else return;
- }
- // End clearNumberOnClock
- */
-
 /* USER CODE END 0 */
 
 /**
@@ -286,28 +272,44 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 int counter = 100; // timer * counter = 10 * 100 = 1sed
+int time_LED = 100;
+
+typedef enum {
+	NUM1, NUM2
+} num;
+
+num estate = NUM1;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	// Testing
-	HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+	if (counter <= 0) {
+		int temp_counter = counter;
+		counter = 100;
+		time_LED += 100 - temp_counter;
+	}
 
-	//--------------Test--------------//
-	//display7SEG(8);
-	//HAL_GPIO_TogglePin(En0_GPIO_Port, En0_Pin);
-	//HAL_GPIO_TogglePin(En1_GPIO_Port, En1_Pin);
-	//HAL_GPIO_TogglePin(En2_GPIO_Port, En2_Pin);
-	//HAL_GPIO_TogglePin(En3_GPIO_Port, En3_Pin);
-
-	// Production
-	if (counter == 100) {
+	switch (estate) {
+	case NUM1:
 		display7SEG(1);
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
-	} else if (counter == 50) {
+		if (time_LED - counter >= 50) {
+			estate = NUM2;
+			time_LED = counter;
+		}
+		break;
+	case NUM2:
 		display7SEG(2);
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+		if (time_LED - counter >= 50) {
+			estate = NUM1;
+			time_LED = counter;
+		}
+		break;
+	default:
+		break;
 	}
-	counter = (counter > 0) ? counter - 1 : 100;
+	counter--;
 }
 /* USER CODE END 4 */
 
