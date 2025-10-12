@@ -1,0 +1,11 @@
+main.c:93:5:main	8	static
+main.c:136:6:SystemClock_Config	72	static
+main.c:169:13:MX_TIM2_Init	32	static
+main.c:211:13:MX_GPIO_Init	32	static
+main.c:274:6:HAL_TIM_PeriodElapsedCallback	24	static
+main.c:336:13:set_LED7_by_mask	32	static
+main.c:350:6:clear7SEG	8	static
+main.c:354:6:display7SEG	24	static
+main.c:363:6:initState	8	static
+main.c:372:6:update7SEG	16	static
+main.c:414:6:Error_Handler	4	static,ignoring_inline_asm
