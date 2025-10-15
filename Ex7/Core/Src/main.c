@@ -66,6 +66,15 @@ static const uint8_t LED7_MAP[10] = { 0b00111111, // 0
 const int MAX_LED = 4;
 int index_led = 0;
 
+typedef enum {
+	NUM1, NUM2, NUM3, NUM4
+} num;
+typedef enum {
+	DARK, BRIGHT
+} dot;
+
+int led_buffer[4] = { 1, 0, 2, 0 };
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,17 +88,41 @@ static void clear7SEG(void);
 static void display7SEG(int);
 static void initState(void);
 static void update7SEG(int);
+static void updateClockBuffer(int, int);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 int timer0_counter = 0;
 int timer0_flag = 0;
+
+int timer1_counter = 0;
+int timer1_flag = 0;
+
+int timer2_counter = 0;
+int timer2_flag = 0;
+
 int TIMER_CYCLE = 10;
 
-void setTimer(int duration) {
+int minute = 0;
+int hour = 0;
+int second = 0;
+//Timer for counter seconds
+void setTimer0(int duration) {
 	timer0_counter = duration / TIMER_CYCLE;
 	timer0_flag = 0;
+}
+
+//Timer for adjusting frequency of LED 7SEGs
+void setTimer1(int duration) {
+	timer1_counter = duration / TIMER_CYCLE;
+	timer1_flag = 0;
+}
+
+//Timer for controlling LED dots
+void setTimer2(int duration) {
+	timer2_counter = duration / TIMER_CYCLE;
+	timer2_flag = 0;
 }
 
 void timer_run() {
@@ -97,6 +130,16 @@ void timer_run() {
 		timer0_counter--;
 		if (timer0_counter == 0)
 			timer0_flag = 1;
+	}
+	if (timer1_counter > 0) {
+		timer1_counter--;
+		if (timer1_counter == 0)
+			timer1_flag = 1;
+	}
+	if (timer2_counter > 0) {
+		timer2_counter--;
+		if (timer2_counter == 0)
+			timer2_flag = 1;
 	}
 }
 /* USER CODE END 0 */
@@ -136,8 +179,80 @@ int main(void) {
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
+	setTimer0(1000);
+	setTimer1(500);
+	setTimer2(1000);
+	dot dot_state = BRIGHT;
+	num num_state = NUM1;
+	second = 50;
+	minute = 59;
+	hour = 10;
 	while (1) {
 		/* USER CODE END WHILE */
+		if(timer0_flag == 1)
+		{
+			setTimer0(1000);
+			second++;
+			if(second >= 60)
+			{
+				second = 0;
+				minute++;
+			}
+			if(minute >= 60)
+			{
+				minute = 0;
+				hour++;
+			}
+			if(hour >= 24)
+			{
+				hour = 0;
+			}
+			updateClockBuffer(hour, minute);
+		}
+
+		if (timer1_flag == 1) {
+			switch (num_state) {
+			case NUM1:
+				update7SEG(NUM1);
+				num_state = NUM2;
+				setTimer1(500);
+				break;
+			case NUM2:
+				update7SEG(NUM2);
+				num_state = NUM3;
+				setTimer1(500);
+				break;
+			case NUM3:
+				update7SEG(NUM3);
+				num_state = NUM4;
+				setTimer1(500);
+				break;
+			case NUM4:
+				update7SEG(NUM4);
+				num_state = NUM1;
+				setTimer1(500);
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (timer2_flag == 1) {
+			switch (dot_state) {
+			case BRIGHT:
+				HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_RESET);
+				dot_state = DARK;
+				setTimer2(300);
+				break;
+			case DARK:
+				HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_SET);
+				dot_state = BRIGHT;
+				setTimer2(700);
+				break;
+			default:
+				break;
+			}
+		}
 
 		/* USER CODE BEGIN 3 */
 	}
@@ -261,91 +376,9 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
-typedef enum {
-	NUM1, NUM2, NUM3, NUM4
-} num;
-typedef enum {
-	DARK, BRIGHT
-} colon;
-
-typedef enum {
-	TIME1 = 100,
-	TIME2 = 100,
-	TIME3 = 100,
-	TIME4 = 100,
-	TIME_COLON_BRIGHT = 70,
-	TIME_COLON_DARK = 30
-
-} time_num;
-
-int counter = 100; // timer * counter = 10 * 100 = 1s
-int time_LED = 100;
-int time_colon = 100;
-num cur_num = NUM1;
-colon cur_colon = BRIGHT;
-
-int led_buffer[4] = { 1, 0, 2, 0 };
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (counter <= 0) {
-		int temp_counter = counter;
-		counter = 100;
-		time_colon += 100 - temp_counter;
-		time_LED += 100 - temp_counter;
-	}
-
-	switch (cur_num) {
-	case NUM1:
-		update7SEG(NUM1);
-		if (time_LED - counter >= TIME1) {
-			cur_num = NUM2;
-			time_LED = counter;
-		}
-		break;
-	case NUM2:
-		update7SEG(NUM2);
-		if (time_LED - counter >= TIME2) {
-			cur_num = NUM3;
-			time_LED = counter;
-		}
-		break;
-	case NUM3:
-		update7SEG(NUM3);
-		if (time_LED - counter >= TIME3) {
-			cur_num = NUM4;
-			time_LED = counter;
-		}
-		break;
-	case NUM4:
-		update7SEG(NUM4);
-		if (time_LED - counter >= TIME4) {
-			cur_num = NUM1;
-			time_LED = counter;
-		}
-		break;
-	default:
-		break;
-	}
-
-	switch (cur_colon) {
-	case BRIGHT:
-		HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_RESET);
-		if (time_colon - counter >= TIME_COLON_BRIGHT) {
-			cur_colon = DARK;
-			time_colon = counter;
-		}
-		break;
-	case DARK:
-		HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_SET);
-		if (time_colon - counter >= TIME_COLON_DARK) {
-			cur_colon = BRIGHT;
-			time_colon = counter;
-		}
-		break;
-	default:
-		break;
-	}
-	counter--;
+	timer_run();
 }
 
 static void set_LED7_by_mask(uint8_t mask) {
@@ -417,6 +450,13 @@ void update7SEG(int index) {
 	default:
 		break;
 	}
+}
+
+void updateClockBuffer(int hour, int minute) {
+	led_buffer[0] = hour / 10;
+	led_buffer[1] = hour % 10;
+	led_buffer[2] = minute / 10;
+	led_buffer[3] = minute % 10;
 }
 /* USER CODE END 4 */
 
