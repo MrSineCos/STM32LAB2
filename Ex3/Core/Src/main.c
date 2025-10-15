@@ -269,7 +269,7 @@ int time_colon = 100;
 num cur_num = NUM1;
 colon cur_colon = BRIGHT;
 
-int led_buffer[4] = { 1, 2, 3, 4 };
+int led_buffer[4] = { 1, 0, 2, 0 };
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (counter <= 0) {

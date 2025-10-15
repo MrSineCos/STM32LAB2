@@ -431,7 +431,7 @@ static void MX_GPIO_Init(void) {
 num cur_num = NUM1;
 colon cur_colon = BRIGHT;
 
-int led_buffer[4] = { 1, 2, 3, 4 };
+int led_buffer[4] = { 1, 0, 2, 0 };
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
  8000328:	b580      	push	{r7, lr}
