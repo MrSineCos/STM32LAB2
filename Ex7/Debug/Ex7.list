@@ -295,8 +295,8 @@ int main(void) {
 	setTimer0(1000);
  800028c:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  8000290:	f7ff ff5c 	bl	800014c <setTimer0>
-	setTimer1(500);
- 8000294:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
+	setTimer1(1000);
+ 8000294:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  8000298:	f7ff ff72 	bl	8000180 <setTimer1>
 	setTimer2(1000);
  800029c:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
@@ -984,8 +984,8 @@ void initState() {
  80006b2:	f44f 7100 	mov.w	r1, #512	; 0x200
  80006b6:	4805      	ldr	r0, [pc, #20]	; (80006cc <initState+0x44>)
  80006b8:	f000 fc76 	bl	8000fa8 <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_SET);
- 80006bc:	2201      	movs	r2, #1
+	HAL_GPIO_WritePin(DOT_GPIO_Port, DOT_Pin, GPIO_PIN_RESET);
+ 80006bc:	2200      	movs	r2, #0
  80006be:	2110      	movs	r1, #16
  80006c0:	4802      	ldr	r0, [pc, #8]	; (80006cc <initState+0x44>)
  80006c2:	f000 fc71 	bl	8000fa8 <HAL_GPIO_WritePin>
