@@ -242,7 +242,6 @@ int main(void) {
 	setTimer3(1000);
 	updateMatrixWindow(scroll_offset);
 	dot dot_state = BRIGHT;
-//	num num_state = NUM1;
 	second = 50;
 	minute = 59;
 	hour = 10;

@@ -27,9 +27,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020028  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00008a4c  00000000  00000000  00020051  2**0
+ 12 .debug_info   00008a4b  00000000  00000000  00020051  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001598  00000000  00000000  00028a9d  2**0
+ 13 .debug_abbrev 00001598  00000000  00000000  00028a9c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_aranges 000009a0  00000000  00000000  0002a038  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -365,7 +365,6 @@ int main(void) {
 	dot dot_state = BRIGHT;
  8000312:	2301      	movs	r3, #1
  8000314:	77fb      	strb	r3, [r7, #31]
-//	num num_state = NUM1;
 	second = 50;
  8000316:	4b59      	ldr	r3, [pc, #356]	; (800047c <main+0x1b4>)
  8000318:	2232      	movs	r2, #50	; 0x32
