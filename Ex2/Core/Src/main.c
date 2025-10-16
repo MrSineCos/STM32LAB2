@@ -310,12 +310,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	// Testing
 	HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 
-	//display7SEG(8);
-	//HAL_GPIO_TogglePin(En0_GPIO_Port, En0_Pin);
-	//HAL_GPIO_TogglePin(En1_GPIO_Port, En1_Pin);
-	//HAL_GPIO_TogglePin(En2_GPIO_Port, En2_Pin);
-	//HAL_GPIO_TogglePin(En3_GPIO_Port, En3_Pin);
-
 	// Production
 	if(counter <= 0)
 	{

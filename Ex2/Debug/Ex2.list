@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  000162a2  00000000  00000000  0002ae80  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   000093c4  00000000  00000000  00041122  2**0
+ 17 .debug_line   000093c2  00000000  00000000  00041122  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008201d  00000000  00000000  0004a4e6  2**0
+ 18 .debug_str    0008201d  00000000  00000000  0004a4e4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000cc503  2**0
+ 19 .comment      00000053  00000000  00000000  000cc501  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00002648  00000000  00000000  000cc558  2**2
+ 20 .debug_frame  00002648  00000000  00000000  000cc554  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -600,9 +600,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
  8000428:	2120      	movs	r1, #32
  800042a:	4889      	ldr	r0, [pc, #548]	; (8000650 <HAL_TIM_PeriodElapsedCallback+0x230>)
  800042c:	f000 fcd8 	bl	8000de0 <HAL_GPIO_TogglePin>
-	//HAL_GPIO_TogglePin(En1_GPIO_Port, En1_Pin);
-	//HAL_GPIO_TogglePin(En2_GPIO_Port, En2_Pin);
-	//HAL_GPIO_TogglePin(En3_GPIO_Port, En3_Pin);
 
 	// Production
 	if(counter <= 0)
