@@ -219,7 +219,6 @@ int main(void) {
 	setTimer2(1000);
 	setTimer3(1000);
 	dot dot_state = BRIGHT;
-//	num num_state = NUM1;
 	second = 50;
 	minute = 59;
 	hour = 10;
